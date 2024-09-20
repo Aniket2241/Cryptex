@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Cryptochart() {
   const [data, setData] = useState(() => {
-    // Retrieve cached data from localStorage if it exists
     const cachedData = localStorage.getItem('cryptoData');
     return cachedData ? JSON.parse(cachedData) : [];
   });
@@ -13,9 +12,8 @@ export default function Cryptochart() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Function to fetch cryptocurrency data
   const fetchCryptoData = async () => {
-    setIsLoading(true); // Show loading state during API call
+    setIsLoading(true);
     try {
       const response = await axios.get(
         'https://api.coingecko.com/api/v3/coins/markets',
@@ -30,27 +28,24 @@ export default function Cryptochart() {
         }
       );
       setData(response.data);
-      localStorage.setItem('cryptoData', JSON.stringify(response.data)); // Cache data in localStorage
-      setIsLoading(false); // Remove loading state after successful call
+      localStorage.setItem('cryptoData', JSON.stringify(response.data));
+      setIsLoading(false);
     } catch (e) {
       setError(e.message + ' ,try reloading the page');
-      setIsLoading(false); // Remove loading state after error
+      setIsLoading(false);
     }
   };
 
-  // useEffect to load data on the first render only if not cached
   useEffect(() => {
     if (!data.length) {
-      fetchCryptoData(); // Only call API if no cached data exists
+      fetchCryptoData();
     }
-  }, []); // Empty dependency array ensures this runs only once on component mount
+  }, []);
 
-  // Format number utility function
   const formatNumber = (number) => {
     return number.toLocaleString('en-IN');
   };
 
-  // Handle row click to navigate to coin details page
   const handleRowClick = (crypto) => {
     navigate('/coininfo', { state: { crypto } });
   };
@@ -75,7 +70,7 @@ export default function Cryptochart() {
             {error}
           </div>
         ) : (
-          <table className="text-white bg-black w-full">
+          <table className="text-white bg-black w-full table-auto">
             <thead>
               <tr className="bg-yellow-400 text-xl text-left text-black font-semibold rounded-md border-2">
                 <th className="p-2">Name</th>
@@ -93,28 +88,34 @@ export default function Cryptochart() {
                     className="cursor-pointer border-2 border-gray-600 border-t-0 border-r-0 border-l-0 hover:text-gray-300 hover:bg-gray-900"
                     onClick={() => handleRowClick(crypto)}
                   >
-                    <td className="py-3 text-2xl font-semibold">
-                      <div className="flex items-center gap-1">
-                        <img src={crypto.image} alt="symbol" className="w-[55px]" />
-                        {crypto.name}
+                    <td className="py-3 text-xl md:text-2xl font-semibold">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={crypto.image}
+                          alt="symbol"
+                          className="w-[30px] h-[30px] md:w-[55px] md:h-[55px]"
+                        />
+                        <span>{crypto.name}</span>
                       </div>
                     </td>
-                    <td className="py-3 text-2xl">Rs.{formatNumber(crypto.current_price)}</td>
+                    <td className="py-3 text-lg md:text-2xl">
+                      Rs.{formatNumber(crypto.current_price)}
+                    </td>
                     <td
-                      className={
+                      className={`py-3 text-md md:text-lg ${
                         crypto.price_change_percentage_24h < 0
-                          ? 'text-red-400 py-3 text-lg'
-                          : 'text-green-400 py-3 text-lg'
-                      }
+                          ? 'text-red-400'
+                          : 'text-green-400'
+                      }`}
                     >
                       {crypto.price_change_percentage_24h.toFixed(2)}%
                     </td>
                     <td
-                      className={
+                      className={`py-3 text-md md:text-lg ${
                         crypto.market_cap_change_percentage_24h < 0
-                          ? 'text-red-400 py-3 text-lg'
-                          : 'text-green-400 py-3 text-lg'
-                      }
+                          ? 'text-red-400'
+                          : 'text-green-400'
+                      }`}
                     >
                       {crypto.market_cap_change_percentage_24h.toFixed(2)}%
                     </td>
