@@ -10,7 +10,7 @@ export default function News() {
 
   async function getnews() {
     try {
-      const response = await fetch("http://localhost:4000");
+      const response = await fetch("https://cryptex-server.vercel.app/");
       const Data = await response.json();
       setnewsdata(Data.data);
     } catch (e) {
