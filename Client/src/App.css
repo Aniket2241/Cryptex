@@ -1,0 +1,13 @@
+body{
+    background-image:url('blockchain.png') ;
+background-repeat: no-repeat;
+background-size: cover;
+}
+
+.box1{
+    background-image: url('box1.jpg');
+    
+}
+.box2{
+    background-image: url('box2.jpg');
+}
